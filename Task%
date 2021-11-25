@@ -1,0 +1,116 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class TASK5
+{
+private:
+	double* ARR;
+	int SIZE;
+	int n;
+	double q; //разность прогрессии
+	double x2; // старое значение x
+
+public:
+	
+	void PUT_SIZE_ARR()
+	{
+		cout << "Введите длинну массива:  ";
+		cin >> SIZE;
+	}
+
+	void CREATE_ARR()
+	{
+		PUT_SIZE_ARR();
+		ARR = new double[SIZE];
+	}
+
+	void FILL_ARR()
+	{
+		double x;
+		cout << "Заполните массив... " << endl;
+	
+		//------  Этот кусок нужен чтобы потом не использовать if и bool для нахождения q, то есть разности прогрессии
+		cin >> x;
+		*(ARR + 0) = x;
+		x2 = x;
+		cin >> x;
+		*(ARR + 1) = x;
+		q = abs(x - x2);
+		x2 = x;
+		//-------------------------------------------------------------------------------
+
+		for (int i = 2; i < SIZE; i++)
+		{
+			cin >> x;
+			CHECK_ARIF_PROG(x); // Динамически проверям существоание прогрессии
+			*(ARR + i) = x;
+		}
+
+		cout << "Массив образует арифметическую прогрессию... " << endl;
+	}
+
+	void FILL_RAND_ARR()
+	{
+		int START_RAND, END_RAND;
+		int x;
+
+		cout << "Введите от какого до какого числа брать рандомные значения: ";
+		cin >> START_RAND >> END_RAND;
+		
+		//------  Этот кусок нужен чтобы потом не использовать if и bool для нахождения q, то есть разности прогрессии
+		x = rand() % END_RAND + START_RAND;
+		*(ARR + 0) = x;
+		cout << x << endl;
+		x2 = x;
+		x = rand() % END_RAND + START_RAND;
+		cout << x << endl;
+		*(ARR + 0) = x;
+		q = abs(x - x2);
+		x2 = x;
+		//-------------------------------------------------------------------------------
+
+		for (int i = 2; i < SIZE; i++)
+		{
+			x = rand() % END_RAND + START_RAND;
+			cout << x << endl;
+			CHECK_ARIF_PROG(x);
+			*(ARR + i) = x;
+		}
+
+		cout << "Массив образует арифметическую прогрессию... (Программа прерывается раньше потому что нет смысла дальше проверять...)" << endl;
+
+	}
+
+	void CHECK_ARIF_PROG(double x)
+	{
+		if ((abs(x - x2)) != q)
+		{
+			cout << "Массив не образует арифметическую прогрессию.... " << endl;
+			exit(EXIT_FAILURE);
+		}
+
+		x2 = x;
+	}
+
+};
+
+
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+
+	int k;
+	TASK5 task5;
+
+	task5.CREATE_ARR(); // создание массива
+	
+	cout << "Выберете способ заполнения? Ручной или рандомный (Вписать 1 или 2): "; cin >> k;
+	if (k == 1) {
+		task5.FILL_ARR();
+	}
+	else {
+		task5.FILL_RAND_ARR();
+	}
+}
