@@ -1,0 +1,332 @@
+#include <iostream>
+#include <stdlib.h>
+#include <cstdlib>
+#include <conio.h>
+#include <Windows.h>
+using namespace std;
+
+enum figure { square, line, serp, pop };
+void map(int, int, int);
+
+// ОСНОВНОЙ КОД ДЛЯ ТАСКА НАЧАЛО 4 ----------------------------------------------------------------------------------------------------------------------
+class Task_4 //   Класс таска
+{
+private:
+	int count;
+	double E;
+	double x, N, saveX;
+	double ExValue;
+	double PartSum;
+public:
+	Task_4() : count (1), PartSum (0)
+	{    }
+
+	void put_E() //функция ввода погрешности
+	{ 
+		cout << "Введите погрешность E для выбранного x: "; cin >> E; 
+		if (E <= 0)
+		{
+			cout << "Необходимо чтобы Е > 0" << endl;
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	void put_X() // Функция ввода переменной x для выражения
+	{
+		cout << "Введите переменную x: "; cin >> x;
+		if (x >= 1 || x < 0)
+		{
+			cout << "Обязательно 0 <= x < 1" << endl;
+			exit(EXIT_FAILURE);
+		}
+		saveX = x;
+	}
+
+	void put_N() // Функция ввода кол-ва слогаемых
+	{
+		cout << "Введите кол-во слогаемых : "; cin >> N;
+		if (N < 1)
+		{
+			cout << "N должен быть больше 1";
+			exit(EXIT_FAILURE);
+		}
+	}
+
+	void line() //  Просто две Функции как в примере, просто объеденённые в одну
+	{
+		int n = 1;
+		double x0 = saveX;
+		x = saveX;
+
+		if (count == 1)
+		{
+			for (int i = 0; i < N; i++)
+			{
+				PartSum += -(x / n);
+
+				n++; x = x * x0;
+			}
+
+			n -= 1; x /= x0;
+			E = -(x / n);
+		}
+		else {
+			PartSum = 0;
+			while ((x / n) > E)
+			{
+				PartSum += -(x / n);
+				n++; x = x * x0;
+				count++;
+			}
+		}
+		
+	}
+
+
+
+	void basis() // Главныя функция выполняющая первое задание
+	{
+		ExValue = log(1 - x);
+        line();
+		
+		
+		cout << "Точное значение равно: " << ExValue << endl;
+		cout << "Частичная сумма равна: " << PartSum << endl;
+		cout << "Абсолютная величина разности: " << abs(ExValue - PartSum) << endl;
+		cout << "Величина последнего члена: " << E << endl;
+		cout << "Разница между полученной погрешностью с абсолютной велич. послед. члена: " << abs(ExValue - PartSum) - abs(E) << endl;
+		if (abs(ExValue - PartSum) > abs(E))
+		{
+			cout << "Абсолютная величина разности больше последнего члена" << endl;
+		}
+		else if (abs(ExValue - PartSum) < abs(E))
+		{
+			cout << "Абсолютная величина разности меньше последнего члена" << endl;
+		}
+		cout << endl;
+	}
+
+
+
+	void basis2() // Вторая главная функция для второго задания
+	{
+		count = 0;
+		line();
+		
+		
+		cout << "\nСумма тех слагаемых заданного вида, которые по абсолютной величине больше Е: " << PartSum << endl;
+		cout << "Кол-во слогаемых: " << count << endl;
+
+		E /= 10;
+
+		count = 0;
+		line();
+
+		cout << "Сумма слогаемых при Е меньшее в 10 раз: " << PartSum << endl;
+		cout << "Кол-во слогаемых: " << count << endl;
+		
+	}
+
+};
+
+//  INT MAIN 
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	char ch; 
+	
+	cout << "Вписать t кому нужен таск, вписать m кому нужен тетрис: ";
+	cin >> ch; cout << endl;
+
+	if (ch == 't')
+	{
+		do {
+			for (int i = 0; i < 120; i++)
+			{
+				cout << "#";
+			}
+			cout << endl;
+
+			Task_4* task4 = new Task_4;
+
+			cout << "Task_4 | Задание 1... " << endl;
+			task4->put_X(); task4->put_N(); cout << endl;
+			task4->basis();
+
+			cout << "Task_4 | Задание 2... " << endl;
+			task4->put_X(); task4->put_E();
+			task4->basis2();
+
+			delete task4;
+
+			cout << "Ещё раз? (буква n - выход из программы) "; cin >> ch;
+			cout << endl;
+		} while (ch != 'n');
+	} // КОНЕЦ ОСНОВНОГО КОДА ДЛЯ ТАСКА 4 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	else {
+		int game = 1;
+		int y0 = 0;
+		int x0 = rand();
+		char ch;
+
+		int y = rand();
+		const int k = y;
+
+		while (game == 1)
+		{
+			map(x0, y0, 3);
+			Sleep(400);
+			system("cls");
+			y0 += 1;
+
+
+			if (_kbhit())
+			{
+				switch (_getch())
+				{
+				case('a'): x0 -= 1; break;
+				case('d'): x0 += 1; break;
+				}
+
+			}
+		}
+	}
+}
+
+
+void map(int x0, int y0, int randFug)
+{
+	for (int j = 0; j <= 50; j++)
+	{
+		cout << '#';
+	}  
+	cout << "       Управление (w a s d)" << endl;
+	int xEnd = x0;;
+	int yEnd = y0;
+	int yes = 1;
+
+	for (int y = 0; y <= 30; y++)
+	{
+
+		cout << '#';
+
+		if (randFug == square)
+			x0 = xEnd;
+
+
+
+
+		for (int x = 0; x < 50; x++)
+		{
+
+
+			if (x != 49)
+			{
+
+				switch (randFug)
+				{
+
+				case(line):
+					if (x == x0 && y <= y0 && y > y0 - 6)
+					{
+						cout << "#";
+					}
+					else
+						cout << " ";
+					break;
+
+
+				case(square):
+					if (x == x0 && y <= y0 && y > y0 - 4)
+					{
+						cout << "#";
+						if (x < xEnd + 3)
+						{
+							x0 += 1;
+						}
+					}
+					else
+						cout << " ";
+					break;
+
+
+				case(serp):
+
+					if (x == x0 && y <= y0 && y >= y0 - 4)
+					{
+
+						cout << "#";
+
+						if (x0 < xEnd)
+						{
+							x0 += 1;
+						}
+
+
+
+					}
+					else
+						cout << " ";
+
+					if (y0 >= 5 && yes == 1)
+					{
+						x0 -= 3;
+						yes = 0;
+					}
+					break;
+
+
+				case(pop):
+
+					if (x == x0 && y == y0)
+					{
+						cout << "#";
+
+						if (x0 < xEnd + 1)
+						{
+							x0 += 1;
+						}
+
+					}
+					else if (y < y0 && y > y0 - 3 && x == x0)
+					{
+						cout << "#";
+					}
+					else if (y == y0 - 3 && x > x0 - 2 && x <= x0)
+					{
+						cout << "#";
+
+						if (x0 < xEnd)
+						{
+							x0 += 1;
+						}
+
+					}
+					else
+						cout << " ";
+
+					break;
+
+				}
+
+
+
+
+			}
+			else
+				cout << '#';
+
+		}
+
+
+
+
+		cout << endl;
+	}
+
+
+
+	for (int j = 0; j <= 50; j++)
+		cout << '#';
+
+}
